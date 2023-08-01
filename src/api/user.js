@@ -16,6 +16,14 @@ export function getInfo(token) {
   })
 }
 
+export function updateInfo(data) {
+  return request({
+    url: '/userTable/updateUser',
+    method: 'post',
+    data
+  })
+}
+
 export function logout() {
   return request({
     url: '/user/logout',

@@ -8,6 +8,7 @@ const getDefaultState = () => {
     name: '',
     avatar: '',
     roles: [],
+    id: undefined
   }
 }
 
@@ -28,6 +29,9 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
+  },
+  SET_ID: (state, id) => {
+    state.id = id
   }
 }
 
@@ -57,11 +61,12 @@ const actions = {
           return reject('Verification failed, please Login again.')
         }
 
-        const { name, avatar, roles } = data
+        const { name, avatar, roles, id } = data
 
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
         commit('SET_ROLES', roles)
+        commit('SET_ID', id)
         resolve(data)
       }).catch(error => {
         reject(error)
@@ -77,6 +82,7 @@ const actions = {
         resetRouter()
         commit('RESET_STATE')
         commit('SET_ROLES', [])
+        commit('SET_ID', undefined)
         resolve()
       }).catch(error => {
         reject(error)
@@ -90,6 +96,7 @@ const actions = {
       removeToken() // must remove  token  first
       commit('RESET_STATE')
       commit('SET_ROLES', [])
+      commit('SET_ID', undefined)
       resolve()
     })
   }
