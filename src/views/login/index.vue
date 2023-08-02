@@ -13,7 +13,7 @@
         <el-input
           ref="username"
           v-model="loginForm.username"
-          placeholder="Username"
+          placeholder="请输入用户名"
           name="username"
           type="text"
           tabindex="1"
@@ -30,21 +30,36 @@
           ref="password"
           v-model="loginForm.password"
           :type="passwordType"
-          placeholder="Password"
+          placeholder="请输入密码"
           name="password"
           tabindex="2"
           auto-complete="on"
-          @keyup.enter.native="handleLogin"
         />
         <span class="show-pwd" @click="showPwd">
           <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
         </span>
       </el-form-item>
 
+      <el-form-item>
+        <el-input
+          ref="captcha"
+          v-model="loginForm.captcha"
+          placeholder="请输入验证码"
+          name="captcha"
+          type="text"
+          tabindex="3"
+          auto-complete="on"
+          @keyup.enter.native="handleLogin"
+        />
+      </el-form-item>
+      <div class="captcha-container">
+        <img :src="captcha" @click="newcaptcha" />
+      </div>
+
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
 
       <div class="tips">
-        <span style="margin-right:20px;">所有用户权限由管理员在系统内授权，此处不提供注册接口</span>
+        <span style="margin-right:20px;">所有用户权限由管理员在系统内授权，此处不提供注册接口。</span>
       </div>
 
     </el-form>
@@ -52,14 +67,16 @@
 </template>
 
 <script>
+import { getCaptcha } from '@/api/captcha'
 
 export default {
   name: 'Login',
   data() {
     return {
+      captcha: '',
       loginForm: {
         username: 'nihao',
-        password: '114514'
+        password: '114514',
       },
       loginRules: {
         username: [
@@ -67,12 +84,15 @@ export default {
         ],
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' }
-        ]
+        ],
       },
       loading: false,
       passwordType: 'password',
       redirect: undefined
     }
+  },
+  created(){
+    this.newcaptcha()
   },
   watch: {
     $route: {
@@ -108,14 +128,17 @@ export default {
           return false
         }
       })
+    },
+    newcaptcha() {
+      getCaptcha().then(res => {
+        this.captcha = 'data:image/png;base64,'+res.data
+      })
     }
   }
 }
 </script>
 
 <style lang="scss">
-/* 修复input 背景不协调 和光标变色 */
-/* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
 $bg:#283443;
 $light_gray:#fff;
@@ -127,7 +150,6 @@ $cursor: #fff;
   }
 }
 
-/* reset element-ui css */
 .login-container {
   .el-input {
     display: inline-block;
