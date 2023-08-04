@@ -44,9 +44,14 @@
           <span>{{ row.stock }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="药物单价" prop="price" width="120" align="center" sortable="custom" :class-name="getSortClass('price')">
+      <el-table-column label="药物售价" prop="priceOut" width="120" align="center" sortable="custom" :class-name="getSortClass('priceOut')">
         <template slot-scope="{row}">
-          <span>{{ row.price }}</span>
+          <span>{{ row.priceOut }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="药物进价" prop="priceIn" width="120" align="center" sortable="custom" :class-name="getSortClass('priceIn')">
+        <template slot-scope="{row}">
+          <span>{{ row.priceIn }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
@@ -83,8 +88,11 @@
         <el-form-item label="药物存量" prop="stock">
           <el-input v-model="temp.stock" placeholder="请输入药物存量"></el-input>
         </el-form-item>
-        <el-form-item label="药物单价" prop="price">
-          <el-input v-model="temp.price" placeholder="请输入药物单价"></el-input>
+        <el-form-item label="药物售价" prop="priceOut">
+          <el-input v-model="temp.priceOut" placeholder="请输入药物单价"></el-input>
+        </el-form-item>
+        <el-form-item label="药物进价" prop="priceIn">
+          <el-input v-model="temp.priceIn" placeholder="请输入药物进价"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -133,7 +141,8 @@ export default{
         manufacturer: undefined,
         description: undefined,
         stock: undefined,
-        price: undefined,
+        priceOut: undefined,
+        priceIn: undefined,
         sort:'+id',
       },
       typeOptions,
@@ -145,7 +154,8 @@ export default{
         manufacturer: '',
         description: '',
         stock: undefined,
-        price: undefined,
+        priceOut: undefined,
+        priceIn: undefined,
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -173,10 +183,14 @@ export default{
           { required: true, message: '请输入药物存量', trigger: 'blur' },
           { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
         ],
-        price: [
-          { required: true, message: '请输入药物单价', trigger: 'blur' },
+        priceOut: [
+          { required: true, message: '请输入药物售价', trigger: 'blur' },
           { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
-        ]
+        ],
+        priceIn: [
+          { required: true, message: '请输入药物进价', trigger: 'blur' },
+          { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
+        ],
       },
       downloadLoading: false
     }
@@ -191,11 +205,6 @@ export default{
         this.list = response.data
         this.total = response.total
         this.listLoading = false
-
-        // 模拟请求完成后停止loading
-        setTimeout(() => {
-          this.listLoading = false
-        }, 1.5 * 1000)
       })
     },
     handleFilter(){
@@ -208,8 +217,10 @@ export default{
         this.sortByID(order)
       }if(prop === 'stock'){
         this.sortByStock(order)
-      }if(prop === 'price'){
-        this.sortByPrice(order)
+      }if(prop === 'priceOut'){
+        this.sortBypriceOut(order)
+      }if(prop === 'priceIn'){
+        this.sortBypriceIn(order)
       }
     },
     sortByID(order){
@@ -228,11 +239,19 @@ export default{
       }
       this.getList()
     },
-    sortByPrice(order){
+    sortBypriceOut(order){
       if(order === 'ascending'){
-        this.listQuery.sort = '+price'
+        this.listQuery.sort = '+priceOut'
       }else{
-        this.listQuery.sort = '-price'
+        this.listQuery.sort = '-priceOut'
+      }
+      this.getList()
+    },
+    sortBypriceIn(order){
+      if(order === 'ascending'){
+        this.listQuery.sort = '+priceIn'
+      }else{
+        this.listQuery.sort = '-priceIn'
       }
       this.getList()
     },
@@ -244,7 +263,8 @@ export default{
         manufacturer: '',
         description: '',
         stock: '',
-        price: '',
+        priceOut: '',
+        priceIn: '',
       }
     },
     handleCreate(){
@@ -304,8 +324,8 @@ export default{
     handleDownload(){
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel =>{
-        const tHeader = ['药物编号','药物名称','药物类型','生产厂家','药物描述','药物存量','药物单价']
-        const filterVal = ['id','name','type','manufacturer','description','stock','price']
+        const tHeader = ['药物编号','药物名称','药物类型','生产厂家','药物描述','药物存量','药物售价','药物进价']
+        const filterVal = ['id','name','type','manufacturer','description','stock','priceOut','priceIn']
         const list = this.formatJson(filterVal)
         excel.export_json_to_excel({
           header: tHeader,

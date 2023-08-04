@@ -95,24 +95,16 @@ export const asyncRoutes = [
         meta: { title: '库存药物', icon: 'table',roles: ['admin','user'] }
       },
       {
-        path: 'order',
-        name: '订单',
-        component: () => import('@/views/database/order/index'),
-        meta: { title: '订单', icon: 'table' ,roles: ['admin','user']},
-        children: [
-          {
-            path: 'finished',
-            name: '已完成',
-            component: () => import('@/views/database/order/finished'),
-            meta: { title: '已完成', icon: 'table', roles: ['admin','user']}
-          },
-          {
-            path: 'unfinished',
-            name: '未完成',
-            component: () => import('@/views/database/order/unfinished'),
-            meta: { title: '未完成', icon: 'table',roles: ['admin','user'] }
-          },
-        ]
+        path: 'finished',
+        name: '已完成订单',
+        component: () => import('@/views/database/order/finished/index'),
+        meta: { title: '已完成订单', icon: 'table', roles: ['admin','user']}
+      },
+      {
+        path: 'unfinished',
+        name: '未完成订单',
+        component: () => import('@/views/database/order/unfinished/index'),
+        meta: { title: '未完成订单', icon: 'table',roles: ['admin','user'] }
       },
       {
         path: 'user',
