@@ -78,7 +78,7 @@
           <el-select v-model="temp.type" placeholder="请选择药物类型" style="width: 100%" class="filter-item">
             <el-option v-for="item in typeOptions" :key="item.key" :label="item.label" :value="item.key"/>
           </el-select>
-        </el-form-item>
+        </el-form-item> 
         <el-form-item label="生产厂家" prop="manufacturer">
           <el-input v-model="temp.manufacturer" placeholder="请输入生产厂家"></el-input>
         </el-form-item>
@@ -181,15 +181,12 @@ export default{
         ],
         stock: [
           { required: true, message: '请输入药物存量', trigger: 'blur' },
-          { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
         ],
         priceOut: [
           { required: true, message: '请输入药物售价', trigger: 'blur' },
-          { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
         ],
         priceIn: [
           { required: true, message: '请输入药物进价', trigger: 'blur' },
-          { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
         ],
       },
       downloadLoading: false

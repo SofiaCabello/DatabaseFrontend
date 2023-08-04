@@ -8,6 +8,13 @@ export function fetchList(query) {
   })
 }
 
+export function getDrugList() {
+  return request({
+    url: '/drug/getDrugList',
+    method: 'get'
+  })
+}
+
 export function updateDrug(data) {
   return request({
     url: '/drug/updateDrug',

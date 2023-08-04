@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getUnfinished(query) {
   return request({
-    url: '/order/unfinished',
+    url: '/order/getUnfinished',
     method: 'get',
     params: query 
   })
@@ -13,5 +13,29 @@ export function getFinished(query){
         url: '/finished/getFinished',
         method: 'get',
         params: query
+    })
+}
+
+export function createUnfinished(data){
+    return request({
+        url: '/order/createUnfinished',
+        method: 'post',
+        data
+    })
+}
+
+export function updateUnfinished(data){
+    return request({
+        url: '/order/updateUnfinished',
+        method: 'post',
+        data
+    })
+}
+
+export function deleteUnfinished(data){
+    return request({
+        url: '/order/deleteUnfinished',
+        method: 'post',
+        data
     })
 }
