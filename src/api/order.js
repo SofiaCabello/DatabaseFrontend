@@ -32,10 +32,18 @@ export function updateUnfinished(data){
     })
 }
 
-export function deleteUnfinished(data){
+export function deleteUnfinished(id){
     return request({
         url: '/order/deleteUnfinished',
         method: 'post',
-        data
+        params: {id}
+    })
+}
+
+export function finishUnfinished(id){
+    return request({
+        url: '/order/finishUnfinished',
+        method: 'post',
+        params: {id}
     })
 }

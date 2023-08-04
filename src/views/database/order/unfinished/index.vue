@@ -45,6 +45,9 @@
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             编辑
           </el-button>
+          <el-button type="info" size="mini" @click="handleFinish(row)">
+            完成
+          </el-button>
           <el-button type="danger" size="mini" @click="handleDelete(row,$index)">
             删除
           </el-button>
@@ -68,12 +71,15 @@
             >
           </el-transfer>
         </el-form-item>
+        <el-form-item label="药物数量" prop="quantity">
+          <el-input v-model="temp.quantity" placeholder="请输入药物数量（用英文逗号隔开）" />
+        </el-form-item>
         <el-form-item label="客户" prop="custom">
           <el-input v-model="temp.custom" placeholder="请输入客户名称" />
         </el-form-item>
         <el-form-item label="订单类型" prop="orderType">
           <el-select v-model="temp.orderType" placeholder="请选择订单类型" clearable>
-            <el-option v-for="item in orderTypeOptions" :key="item.key" :label="item.value" :value="item.key" />
+            <el-option v-for="item in orderTypeOptions" :key="item.label" :label="item.value" :value="item.label" />
           </el-select>
         </el-form-item>
         <el-form-item label="订单创建时间" prop="time">
@@ -89,7 +95,7 @@
 </template>
 
 <script>
-import { getUnfinished, createUnfinished, updateUnfinished, deleteUnfinished } from '@/api/order';
+import { getUnfinished, createUnfinished, updateUnfinished, deleteUnfinished, finishUnfinished } from '@/api/order';
 import { getDrugList } from '@/api/drug';
 import Pagination from '@/components/Pagination';
 
@@ -140,7 +146,8 @@ export default{
         name: undefined,
         custom: undefined,
         orderType: undefined,
-        time: undefined
+        time: undefined,
+        quantity: undefined
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -149,6 +156,9 @@ export default{
         create: '新增订单'
       },
       rules:{
+        quantity: [
+          { required: true, message: '请输入药物数量', trigger: 'blur' }
+        ],
         custom: [
           { required: true, message: '请输入客户名称', trigger: 'blur' }
         ],
@@ -158,6 +168,7 @@ export default{
         time: [
           { required: true, message: '请选择订单创建时间', trigger: 'blur' }
         ]
+        
       },
       downloadLoading: false
     }
@@ -308,6 +319,21 @@ export default{
           filename: '已完成订单列表'
         })
         this.downloadLoading = false
+      })
+    },
+    handleFinish(row,index){
+      this.$confirm('此操作将该订单标记为已完成, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        finishUnfinished(row.id).then(() => {
+          this.list.splice(index,1)
+          this.$message({
+            message: '标记成功',
+            type: 'success'
+          })
+        })
       })
     },
     formatJson(filterVal){  
