@@ -24,11 +24,12 @@ export function createUnfinished(data){
     })
 }
 
-export function updateUnfinished(data){
+export function updateUnfinished(data, id){
     return request({
         url: '/order/updateUnfinished',
         method: 'post',
-        data
+        data,
+        params: {id}
     })
 }
 

@@ -38,3 +38,17 @@ export function deleteDrug(id) {
     params: { id }
   })
 }
+
+export function getEchart(){
+  return request({
+    url: '/drug/getEchart',
+    method: 'get'
+  })
+}
+
+export function getProfit(){
+  return request({
+    url: '/drug/setProfitData',
+    method: 'get'
+  })
+}

@@ -143,7 +143,6 @@ export default{
       downloadLoading: false,
       temp:{
         id: undefined,
-        name: undefined,
         custom: undefined,
         orderType: undefined,
         time: undefined,
@@ -278,10 +277,11 @@ export default{
         this.$refs['dataForm'].clearValidate()
       })
     },
-    updateData(){
+    updateData(row,index){
       this.$refs['dataForm'].validate(valid => {
         if(valid){
-          updateUnfinished(this.temp).then(() => {
+          const tempData = Object.assign({},this.temp)
+          updateUnfinished(tempData, row.id).then(() => {
             this.$message({
               message: '更新成功',
               type: 'success'
